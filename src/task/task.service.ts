@@ -16,4 +16,18 @@ export class TaskService {
     }
     return task.save();
   }
+  findAll() {
+    const tasks = this.taskModel.find().exec();
+    if (!tasks) {
+      throw new NotFoundException(`Tasks not found`);
+    }
+    return tasks;
+  }
+  async findOne(id: string) {
+    const task = await this.taskModel.findOne({ _id: id }).exec();
+    if (!task) {
+      throw new NotFoundException(`Task ${id} not found`);
+    }
+    return task;
+  }
 }
