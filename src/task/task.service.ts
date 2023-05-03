@@ -40,4 +40,8 @@ export class TaskService {
     }
     return existingTask;
   }
+  async remove(id: string) {
+    const deletedTask = await this.taskModel.findByIdAndRemove(id);
+    return deletedTask;
+  }
 }
