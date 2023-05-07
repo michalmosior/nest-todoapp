@@ -10,6 +10,7 @@ export class TaskService {
   constructor(
     @InjectModel(Task.name) private readonly taskModel: Model<Task>,
   ) {}
+
   create(createTaskDto: CreateTaskDto) {
     const task = new this.taskModel(createTaskDto);
     if (!task) {
@@ -17,6 +18,7 @@ export class TaskService {
     }
     return task.save();
   }
+
   findAll() {
     const tasks = this.taskModel.find().exec();
     if (!tasks) {
@@ -24,6 +26,7 @@ export class TaskService {
     }
     return tasks;
   }
+
   async findOne(id: string) {
     const task = await this.taskModel.findOne({ _id: id }).exec();
     if (!task) {
@@ -31,6 +34,7 @@ export class TaskService {
     }
     return task;
   }
+
   async update(id: string, updateTaskDto: UpdateTaskDto) {
     const existingTask = await this.taskModel
       .findOneAndUpdate({ _id: id }, { $set: updateTaskDto }, { new: true })
@@ -40,8 +44,12 @@ export class TaskService {
     }
     return existingTask;
   }
+
   async remove(id: string) {
     const deletedTask = await this.taskModel.findByIdAndRemove(id);
+    if (!deletedTask) {
+      throw new NotFoundException(`Task #${id} not found`);
+    }
     return deletedTask;
   }
 }
